@@ -1,5 +1,5 @@
 // Business Rule Engine imports
-const BaseRule = require('./business-rule-engine/BRB001.js');
+const BaseRule = require('./business-rule-engine/BRB001.js');                
 const RuleRepository = require('./business-rule-engine/BRR001.js');
 const Conditions = require('./business-rule-engine/BRC001.js');
 const Actions = require('./business-rule-engine/BRA001.js');

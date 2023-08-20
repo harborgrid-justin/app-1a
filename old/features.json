@@ -1,0 +1,42 @@
+{
+    "software": "Red Hat Decision Manager",
+    "formerlyKnownAs": "Red Hat JBoss BRMS",
+    "description": "A comprehensive business automation platform for business rules management, business resource optimization, and complex event processing (CEP).",
+    "capabilities": {
+        "businessRulesManagement": {
+            "description": "Allows organizations to define, manage, and incorporate business rules into applications.",
+            "benefits": [
+                "Flexibility to change business rules without modifying application code",
+                "Centrally manage business logic"
+            ]
+        },
+        "businessResourceOptimization": {
+            "description": "Optimizes the allocation and use of available business resources.",
+            "benefits": [
+                "Efficient resource utilization",
+                "Enhanced business operations"
+            ]
+        },
+        "complexEventProcessing": {
+            "description": "Handles and processes multiple events to identify and react to complex patterns.",
+            "benefits": [
+                "Real-time insight into event patterns",
+                "Quick response to complex business scenarios"
+            ]
+        },
+        "sophisticatedDecisionLogicIntegration": {
+            "description": "Incorporate sophisticated decision logic into line-of-business applications.",
+            "benefits": [
+                "Enhanced decision-making capabilities",
+                "Customizable logic based on business needs"
+            ]
+        },
+        "quickBusinessRuleUpdates": {
+            "description": "Quickly update underlying business rules as market conditions change.",
+            "benefits": [
+                "Adapt to changing market scenarios",
+                "Maintain a competitive edge"
+            ]
+        }
+    }
+}

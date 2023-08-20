@@ -1,0 +1,44 @@
+{
+    "businessRulesManagementMethods": {
+        "defineBusinessRules": {
+            "input": ["Rule data (conditions, actions, etc.)"],
+            "output": "Rule ID or confirmation of rule creation",
+            "description": "Define a new business rule based on the provided data."
+        },
+        "getBusinessRules": {
+            "input": ["Optional filters (rule ID, category, etc.)"],
+            "output": "List of business rules",
+            "description": "Retrieve a list of business rules based on optional filters."
+        },
+        "updateBusinessRule": {
+            "input": ["Rule ID", "updated rule data"],
+            "output": "Confirmation of update",
+            "description": "Modify an existing business rule using the provided data."
+        },
+        "deleteBusinessRule": {
+            "input": ["Rule ID"],
+            "output": "Confirmation of deletion",
+            "description": "Remove a specific business rule based on its ID."
+        },
+        "integrateRuleIntoApplication": {
+            "input": ["Rule ID", "application details"],
+            "output": "Integration status or ID",
+            "description": "Incorporate a specific business rule into a line-of-business application."
+        },
+        "removeRuleFromApplication": {
+            "input": ["Integration ID or rule ID", "application details"],
+            "output": "Confirmation of removal",
+            "description": "Remove a previously integrated business rule from an application."
+        },
+        "modifyRuleWithoutCodeChange": {
+            "input": ["Rule ID", "updated rule data"],
+            "output": "Confirmation of modification",
+            "description": "Change the logic of a business rule without altering the application's source code."
+        },
+        "centralizeLogicManagement": {
+            "input": ["Logic or rule details"],
+            "output": "Centralized management status or ID",
+            "description": "Manage business logic in a central repository or platform."
+        }
+    }
+}

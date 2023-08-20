@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Business Rule</title>
+    <script src="createRuleFrontend.js" defer></script>
+</head>
+<body>
+
+<h2>Create a Business Rule</h2>
+
+<form id="createRuleForm">
+    <div>
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category" required>
+    </div>
+    <div>
+        <label for="condition">Condition:</label>
+        <textarea id="condition" name="condition" rows="3" required></textarea>
+    </div>
+    <div>
+        <label for="action">Action:</label>
+        <textarea id="action" name="action" rows="3" required></textarea>
+    </div>
+    <button type="submit">Create Rule</button>
+</form>
+
+</body>
+</html>

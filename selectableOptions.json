@@ -1,0 +1,22 @@
+{
+    "assignees": [
+        "USER-001",
+        "USER-002",
+        "USER-003"
+    ],
+    "documentIds": [
+        "DOC-123",
+        "DOC-124",
+        "DOC-125"
+    ],
+    "requesterIds": [
+        "USER-004",
+        "USER-005",
+        "USER-006"
+    ],
+    "workflowIds": [
+        "WF-001",
+        "WF-002",
+        "WF-003"
+    ]
+}

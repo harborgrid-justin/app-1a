@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orchestration Engine Frontend</title>
+</head>
+<body>
+    <h1>Decisions and Tasks</h1>
+    <div id="notifications"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://localhost:3000');
+        const notificationsDiv = document.getElementById('notifications');
+
+        socket.on('decision', (decision) => {
+            notificationsDiv.innerHTML += `<p>New Decision: ${decision}</p>`;
+        });
+
+        socket.on('task', (task) => {
+            notificationsDiv.innerHTML += `<p>New Task: ${task.task}</p>`;
+        });
+    </script>
+</body>
+</html>

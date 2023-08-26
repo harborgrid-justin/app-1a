@@ -1,25 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Orchestration Engine Frontend</title>
+    <title>Condition Engine GUI</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Decisions and Tasks</h1>
-    <div id="notifications"></div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io.connect('http://localhost:3000');
-        const notificationsDiv = document.getElementById('notifications');
-
-        socket.on('decision', (decision) => {
-            notificationsDiv.innerHTML += `<p>New Decision: ${decision}</p>`;
-        });
-
-        socket.on('task', (task) => {
-            notificationsDiv.innerHTML += `<p>New Task: ${task.task}</p>`;
-        });
-    </script>
+    <div class="app-container">
+        <h2>Condition Engine</h2>
+        <div>
+            <textarea id="dataInput" placeholder="Enter data in JSON format"></textarea>
+        </div>
+        <div>
+            <textarea id="conditionInput" placeholder="Enter condition in JSON format"></textarea>
+        </div>
+        <button id="evaluateBtn">Evaluate</button>
+        <div>
+            <p>Result: <span id="resultOutput"></span></p>
+        </div>
+    </div>
+    <script src="./renderer.js"></script>
 </body>
 </html>

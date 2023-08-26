@@ -1,51 +1,30 @@
 const express = require('express');
-const { MongoClient } = require('mongodb');
-const http = require('http');
-const socketIo = require('socket.io');
+const bodyParser = require('body-parser');
+const ConditionsEngineAlpha = require('./engine_one');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
+const port = 3000;
+const engine = new ConditionsEngineAlpha();
 
-const MONGODB_URI = "YOUR_MONGODB_URI";
-const client = new MongoClient(MONGODB_URI);
-let db;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public')); // this is for serving static files like HTML, CSS, etc.
 
-app.use(express.json());
+app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/index.html');
+});
 
-// Our Orchestration Engine Class remains largely unchanged.
-class OrchestrationEngine {
-    // ... [Previous Class Definition]
-
-    sendDecision(decision) {
-        io.emit('decision', decision);
+app.post('/evaluate', (req, res) => {
+    try {
+        const data = JSON.parse(req.body.data);
+        const condition = JSON.parse(req.body.condition);
+        const result = engine.evaluate(condition, data);
+        res.json({ success: true, result: result });
+    } catch (error) {
+        res.json({ success: false, error: error.message });
     }
-
-    sendTask(task) {
-        io.emit('task', task);
-    }
-}
-
-const engine = new OrchestrationEngine();
-
-app.post('/addrule', (req, res) => {
-    const { name, weight } = req.body;
-    const fn = new Function('data', req.body.fnBody);
-    engine.addRule(name, fn, weight);
-    res.send({ status: 'Rule added successfully!' });
 });
 
-app.post('/decide', async (req, res) => {
-    const decision = engine.decide(req.body);
-    await db.collection('decisions').insertOne({ decision, timestamp: Date.now() });
-    res.send({ decision });
-});
-
-io.on('connection', (socket) => {
-    console.log('Frontend connected');
-});
-
-client.connect(err => {
-    db = client.db("OrchestrationDB");
-    server.listen(3000, () => console.log('Server started on http://localhost:3000'));
+app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`);
 });

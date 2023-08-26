@@ -1,30 +1,32 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require('body-parser');
-const ConditionsEngineAlpha = require('./engine_one');
+const OrchestrationEngine = require('./public/engine_two.js');
 
 const app = express();
-const port = 3000;
-const engine = new ConditionsEngineAlpha();
+const PORT = 3000;
+const engine = new OrchestrationEngine();
 
+// Middleware
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public')); // this is for serving static files like HTML, CSS, etc.
 
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/public/index.html');
-});
-
-app.post('/evaluate', (req, res) => {
+// API endpoint to evaluate data
+app.post('/api/evaluate', (req, res) => {
     try {
-        const data = JSON.parse(req.body.data);
-        const condition = JSON.parse(req.body.condition);
-        const result = engine.evaluate(condition, data);
-        res.json({ success: true, result: result });
+        const data = req.body;
+        const decision = engine.decide(data);
+        res.json({ decision });
     } catch (error) {
-        res.json({ success: false, error: error.message });
+        res.status(500).json({ error: error.message });
     }
 });
 
-app.listen(port, () => {
-    console.log(`App listening at http://localhost:${port}`);
+// Serve index_two.html as the default page
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index_two.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });

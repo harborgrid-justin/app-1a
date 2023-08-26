@@ -1,3 +1,6 @@
+class InvalidConditionError extends Error {}
+class InvalidOperatorError extends Error {}
+
 class ConditionsEngineAlpha {
     constructor() {
         this.customFunctions = {};
@@ -14,13 +17,13 @@ class ConditionsEngineAlpha {
     }
 
     evaluate(condition, data) {
-        if (!condition || !data) {
-            throw new Error("Invalid input for evaluation.");
+        if (!condition || typeof condition !== 'object' || !data || typeof data !== 'object') {
+            throw new InvalidConditionError("Invalid input for evaluation.");
         }
 
         const evaluator = this.evaluators[condition.type];
         if (!evaluator) {
-            throw new Error(`Invalid condition type: ${condition.type}`);
+            throw new InvalidOperatorError(`Invalid condition type: ${condition.type}`);
         }
         return evaluator(condition, data);
     }
@@ -45,7 +48,7 @@ class ConditionsEngineAlpha {
             case '<': return val < value;
             case '>=': return val >= value;
             case '<=': return val <= value;
-            case '===': return val === value;  // Ensuring strict comparison
+            case '===': return val === value;
             default: throw new Error(`Invalid numeric operator: ${operator}`);
         }
     }
@@ -53,43 +56,51 @@ class ConditionsEngineAlpha {
     evaluateString(condition, data) {
         const val = data[condition.field];
         switch (condition.operator) {
-            case '==': return val === condition.value; // Here we use '==' as the condition operator but still use strict comparison in JavaScript
+            case 'eq': return val === condition.value;
             case 'contains': return val.includes(condition.value);
-            default: throw new Error(`Invalid string operator: ${condition.operator}`);
+            default: throw new InvalidOperatorError(`Invalid string operator: ${condition.operator}`);
         }
     }
-    
+
     evaluateDate(condition, data) {
         const d1 = new Date(data[condition.field]);
         const d2 = new Date(condition.value);
-        return this.evaluateNumeric({
-            operator: condition.operator,
-            field: d1.getTime(),
-            value: d2.getTime()
-        }, data);
+        if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
+            throw new InvalidConditionError("Invalid date format.");
+        }
+        switch (condition.operator) {
+            case 'gt': return d1 > d2;
+            case 'lt': return d1 < d2;
+            case 'eq': return d1.getTime() === d2.getTime();
+            default: throw new InvalidOperatorError(`Invalid date operator: ${condition.operator}`);
+        }
     }
 
     evaluateArray(condition, data) {
         const array = data[condition.field];
+        if (!Array.isArray(array)) {
+            throw new InvalidConditionError("Expected an array for evaluation.");
+        }
         switch (condition.operator) {
             case 'includesAll': return condition.values.every(val => array.includes(val));
             case 'includesAny': return condition.values.some(val => array.includes(val));
-            default: throw new Error(`Invalid array operator: ${condition.operator}`);
+            default: throw new InvalidOperatorError(`Invalid array operator: ${condition.operator}`);
         }
     }
 
     addCustomFunction(name, func) {
         if (typeof func !== 'function') {
-            throw new Error(`Expected a function for custom function: ${name}`);
+            throw new TypeError(`Expected a function for custom function: ${name}`);
         }
         this.customFunctions[name] = func;
     }
 
     evaluateCustomFunction(name, data) {
-        if (this.customFunctions[name]) {
-            return this.customFunctions[name](data);
+        const customFunc = this.customFunctions[name];
+        if (!customFunc) {
+            throw new Error(`Function ${name} not found.`);
         }
-        throw new Error(`Function ${name} not found.`);
+        return customFunc(data);
     }
 
     on(event, action) {
@@ -100,21 +111,23 @@ class ConditionsEngineAlpha {
     }
 
     trigger(event, data) {
-        if (this.eventListeners[event]) {
-            for (const action of this.eventListeners[event]) {
-                action(data);
-            }
+        const listeners = this.eventListeners[event];
+        if (listeners) {
+            listeners.forEach(action => action(data));
         }
     }
 
     suggestCondition(dataHistory) {
+        if (!Array.isArray(dataHistory)) {
+            throw new InvalidConditionError("Expected an array for data history.");
+        }
         const suggestions = [];
-        const ageSum = dataHistory.reduce((sum, data) => sum + data.age, 0);
+        const ageSum = dataHistory.reduce((sum, data) => sum + (data.age || 0), 0);
         const avgAge = ageSum / dataHistory.length;
         suggestions.push({
             type: 'NUMERIC_COMPARISON',
             field: 'age',
-            operator: '<',
+            operator: 'lt',
             value: avgAge
         });
         return suggestions;

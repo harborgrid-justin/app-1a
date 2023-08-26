@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orchestration Engine Tester v2</title>
+    <script>
+        async function evaluateDecision() {
+            const budget = parseFloat(document.getElementById('budgetInput').value);
+            const time = parseFloat(document.getElementById('timeInput').value);
+            const isVerified = document.getElementById('isVerifiedInput').checked;
+
+            const data = { budget, time, isVerified };
+
+            try {
+                const response = await fetch('/api/evaluate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                document.getElementById('decisionDisplay').innerText = `Decision: ${result.decision}`;
+            } catch (error) {
+                document.getElementById('decisionDisplay').innerText = `Error occurred: ${error.message}`;
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Input Data Form -->
+    <div>
+        <h3>Input Data</h3>
+        Budget: <input type="number" id="budgetInput"><br>
+        Time: <input type="number" id="timeInput"><br>
+        Is Verified: <input type="checkbox" id="isVerifiedInput"><br>
+    </div>
+
+    <!-- Evaluate Button -->
+    <button onclick="evaluateDecision()">Evaluate</button>
+
+    <!-- Decision Display -->
+    <div>
+        <h3>Decision</h3>
+        <p id="decisionDisplay"></p>
+    </div>
+
+    <!-- Notification Display -->
+    <div>
+        <h3>Notifications</h3>
+        <p id="notificationDisplay"></p>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-const ConditionsEngine = require('./engine_one');
+const ConditionsEngine = require('../engine_one');
 
 describe('ConditionsEngine Security Audit', () => {
     

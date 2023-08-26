@@ -1,30 +1,29 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
-const OrchestrationEngine = require('./public/engine_two.js');
+const engineOneRoutes = require('./routes/routesEngineOne');
+const engineTwoRoutes = require('./routes/routesEngineTwo');
+const engineThreeRoutes = require('./routes/routesEngineThree');
 
 const app = express();
 const PORT = 3000;
-const engine = new OrchestrationEngine();
 
-// Middleware
+// Middleware to parse JSON requests
+app.use(express.json());
+// Middleware to parse URL-encoded requests
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json());
 
-// API endpoint to evaluate data
-app.post('/api/evaluate', (req, res) => {
-    try {
-        const data = req.body;
-        const decision = engine.decide(data);
-        res.json({ decision });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+// Use the modularized routes
+app.use('/engineOne', engineOneRoutes);
+app.use('/engineTwo', engineTwoRoutes);
+app.use('/engineThree', engineThreeRoutes);
 
-// Serve index_two.html as the default page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index_two.html'));
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
 });
 
 app.listen(PORT, () => {
